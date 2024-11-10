@@ -173,8 +173,8 @@ async def _status(_, message: Message):
     await message.edit("<code>Getting info...</code>")
 
     prefix = get_prefix()
-    repo_link = "https://github.com/KurimuzonAkuma/Kurimuzon-Userbot"
-    dev_link = "https://t.me/KurimuzonAkuma"
+    repo_link = "https://github.com/PureAholy/Pure-UserBot"
+    dev_link = "https://t.me/PureAholy"
     cpu_usage = get_cpu_usage()
     ram_usage = get_ram_usage()
     current_time = arrow.get()
@@ -192,12 +192,12 @@ async def _status(_, message: Message):
     )
 
     result = (
-        f"<emoji id=5219903664428167948>🤖</emoji> <a href='{repo_link}'>Kurimuzon-Userbot</a> / "
+        f"<emoji id=5219903664428167948>🤖</emoji> <a href='{repo_link}'>Pure</a> / "
     )
     result += f"<a href='{repo_link}/commit/{current_hash}'>#{current_hash[:7]} ({current_version})</a>\n\n"
     result += f"<b>Pyrogram:</b> <code>{pyrogram.__version__}</code>\n"
     result += f"<b>Python:</b> <code>{sys.version}</code>\n"
-    result += f"<b>Dev:</b> <a href='{dev_link}'>KurimuzonAkuma</a>\n\n"
+    result += f"<b>Dev:</b> <a href='{dev_link}'>PureAholy</a>\n\n"
 
     if "-a" not in common_args:
         return await message.edit(result, disable_web_page_preview=True)
