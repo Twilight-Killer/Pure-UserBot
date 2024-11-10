@@ -61,7 +61,7 @@ async def main():
     except git.exc.InvalidGitRepositoryError:
         repo = git.Repo.init()
         origin = repo.create_remote(
-            "origin", "https://github.com/KurimuzonAkuma/Kurimuzon-Userbot"
+            "origin", "https://github.com/PureAholy/Pure-UserBot"
         )
         origin.fetch()
         repo.create_head("master", origin.refs.master)
