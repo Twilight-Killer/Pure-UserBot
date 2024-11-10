@@ -23,17 +23,17 @@ fi
 
 
 
-if [ -d "Kurimuzon-Userbot" ]; then
-    cd Kurimuzon-Userbot || exit 2
+if [ -d "Pure-Userbot" ]; then
+    cd Pure-Userbot || exit 2
     elif [ -f ".env.example" ] && [ -f "main.py" ] && [ -d "plugins" ]; then
     :
 else
-    git clone https://github.com/KurimuzonAkuma/Kurimuzon-Userbot || exit 2
-    cd Kurimuzon-Userbot || exit 2
+    git clone https://github.com/PureAholy/Pure-Userbot || exit 2
+    cd Pure-Userbot || exit 2
 fi
 
-if [ -f ".env" ] && [ -f "KurimuzonUserbot.session" ]; then
-    printf "It seems that Kurimuzon-Userbot is already installed. Exiting...\n"
+if [ -f ".env" ] && [ -f "Pure.session" ]; then
+    printf "It seems that Pure-Userbot is already installed. Exiting...\n"
     exit
 fi
 
@@ -86,7 +86,7 @@ EOL
 if [ -x "$(command -v termux-setup-storage)" ]; then
     echo
     echo "============================"
-    echo "Great! Kurimuzon-Userbot installed successfully!"
+    echo "Great! Pure-Userbot installed successfully!"
     echo "Start with: \"python3 main.py\""
     echo "============================"
 else
@@ -103,9 +103,9 @@ else
 
     case $install_type in
         1)
-        cat > /etc/systemd/system/Kurimuzon-Userbot.service << EOL
+        cat > /etc/systemd/system/Pure-Userbot.service << EOL
     [Unit]
-    Description=Service for Kurimuzon-Userbot
+    Description=Service for Pure-Userbot
     [Service]
     Type=simple
     ExecStart=$(which python3) ${PWD}/main.py
@@ -125,15 +125,15 @@ EOL
                 fi
             fi
             systemctl daemon-reload
-            systemctl start Kurimuzon-Userbot
-            systemctl enable Kurimuzon-Userbot
+            systemctl start Pure-Userbot
+            systemctl enable Pure-Userbot
 
             echo
             echo "============================"
-            echo "Great! Kurimuzon-Userbot installed successfully and running now!"
+            echo "Great! Pure-Userbot installed successfully and running now!"
             echo "Installation type: Systemd service"
-            printf "Start with: \e[0;36msudo systemctl start Kurimuzon-Userbot\e[0m"
-            printf "Stop with: \e[0;36msudo systemctl start Kurimuzon-Userbot\e[0m"
+            printf "Start with: \e[0;36msudo systemctl start Pure-Userbot\e[0m"
+            printf "Stop with: \e[0;36msudo systemctl start Pure-Userbot\e[0m"
             echo "============================"
         ;;
         2)
@@ -144,16 +144,16 @@ EOL
                 su -c "pm2 startup" "$SUDO_USER"
                 env PATH="$PATH":"/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $SUDO_USER --hp /home/$SUDO_USER"
             fi
-            su -c "pm2 start main.py --name KurimuzonUserbot --interpreter python3" "$SUDO_USER"
+            su -c "pm2 start main.py --name PureUserbot --interpreter python3" "$SUDO_USER"
             su -c "pm2 save" "$SUDO_USER"
 
             echo
             echo "============================"
-            echo "Great! Kurimuzon-Userbot installed successfully and running now!"
+            echo "Great! Pure-Userbot installed successfully and running now!"
             echo "Installation type: PM2"
-            printf "Start with: \e[0;36mpm2 start KurimuzonUserbot\e[0m"
-            printf "Stop with: \e[0;36mpm2 stop KurimuzonUserbot\e[0m"
-            echo "Process name: KurimuzonUserbot"
+            printf "Start with: \e[0;36mpm2 start PureUserbot\e[0m"
+            printf "Stop with: \e[0;36mpm2 stop PureUserbot\e[0m"
+            echo "Process name: PureUserbot"
             echo "============================"
         ;;
         3)
@@ -200,18 +200,18 @@ EOL
 
             echo
             echo "============================"
-            echo "Great! Kurimuzon-Userbot installed successfully!"
+            echo "Great! Pure-Userbot installed successfully!"
             echo "Installation type: Docker"
             printf 'Start with: \e[0;36mdocker start %s\e[0m' "$container_id"
             printf 'Stop with: \e[0;36mdocker stop %s\e[0m' "$container_id"
-            echo "Process name: KurimuzonUserbot"
+            echo "Process name: PureUserbot"
             echo "============================"
             printf '\e[0;31mAttach to docker container to continue installation using: \e[0;36mdocker attach %s\e[0m\n' "$container_id"
         ;;
         *)
             echo
             echo "============================"
-            echo "Great! Kurimuzon-Userbot installed successfully!"
+            echo "Great! Pure-Userbot installed successfully!"
             echo "Installation type: Custom"
             echo "Start with: \"python3 main.py\""
             echo "============================"
