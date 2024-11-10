@@ -57,13 +57,13 @@ async def _restart(_: Client, message: Message):
             "type": "restart",
         },
     )
-    await message.edit("<code>Restarting...</code>")
+    await message.edit("<code>Перезагружаюсь...</code>")
     restart()
 
 
 @Client.on_message(~filters.scheduled & command(["update"]) & filters.me & ~filters.forwarded)
 async def _update(_: Client, message: Message):
-    await message.edit("<code>Updating...</code>")
+    await message.edit("<code>Обновляюсь...</code>")
     args, nargs = get_args(message)
 
     current_hash = git.Repo().head.commit.hexsha
@@ -74,7 +74,7 @@ async def _update(_: Client, message: Message):
     upcoming = next(git.Repo().iter_commits(f"origin/{branch}", max_count=1)).hexsha
 
     if current_hash == upcoming:
-        return await message.edit("<b>Userbot already up to date</b>")
+        return await message.edit("<b>Юзер-бот уже обновлен до актуальной версии</b>")
 
     if "--hard" in args:
         await shell_exec("git reset --hard HEAD")
@@ -83,7 +83,7 @@ async def _update(_: Client, message: Message):
         git.Repo().remote("origin").pull()
     except git.exc.GitCommandError as e:
         return await message.edit_text(
-            "<b>Update failed! Try again with --hard argument.</b>\n\n"
+            "<b>Ошибка обнволения! Попробуйте с аргументом --hard.</b>\n\n"
             f"<code>{e.stderr.strip()}</code>"
         )
 
@@ -134,13 +134,13 @@ async def set_prefix(_, message: Message):
 
     if not args:
         return await message.edit_text(
-            f"Current prefix: <code>{prefix}</code>\n"
-            f"To change prefix use <code>{prefix}{message.command[0]} [new prefix]</code>"
+            f"Текущий префикс: <code>{prefix}</code>\n"
+            f"Для изменения префикса на другой используйте: <code>{prefix}{message.command[0]} [новый префикс]</code>"
         )
 
     _prefix = args[0]
     db.set("core.main", "prefix", _prefix)
-    await message.edit(f"<b>Prefix changed to:</b> <code>{_prefix}</code>")
+    await message.edit(f"<b>Префикс изменён на:</b> <code>{_prefix}</code>")
 
 
 @Client.on_message(
@@ -161,7 +161,7 @@ async def sendmod(client: Client, message: Message):
                     caption=text,
                 )
         else:
-            await message.edit(f"<b>Module {module_name} not found!</b>")
+            await message.edit(f"<b>Модуль {module_name} не найден!</b>")
     except Exception as e:
         await message.reply(format_exc(e), quote=False)
 
@@ -197,38 +197,38 @@ async def _status(_, message: Message):
     result += f"<a href='{repo_link}/commit/{current_hash}'>#{current_hash[:7]} ({current_version})</a>\n\n"
     result += f"<b>Pyrogram:</b> <code>{pyrogram.__version__}</code>\n"
     result += f"<b>Python:</b> <code>{sys.version}</code>\n"
-    result += f"<b>Dev:</b> <a href='{dev_link}'>PureAholy</a>\n\n"
+    result += f"<b>Разработчик:</b> <a href='{dev_link}'>PureAholy</a>\n\n"
 
     if "-a" not in common_args:
         return await message.edit(result, disable_web_page_preview=True)
 
-    result += "<b>Bot status:</b>\n"
+    result += "<b>Статус:</b>\n"
     result += (
-        f"├─<b>Uptime:</b> <code>{uptime.humanize(current_time, only_distance=True)}</code>\n"
+        f"├─<b>Работает:</b> <code>{uptime.humanize(current_time, only_distance=True)}</code>\n"
     )
-    result += f"├─<b>Branch:</b> <code>{branch}</code>\n"
-    result += f"├─<b>Current version:</b> <a href='{repo_link}/commit/{current_hash}'>"
+    result += f"├─<b>Ветка:</b> <code>{branch}</code>\n"
+    result += f"├─<b>Текущая версия:</b> <a href='{repo_link}/commit/{current_hash}'>"
     result += f"#{current_hash[:7]} ({current_version})</a>\n"
-    result += f"├─<b>Latest version:</b> <a href='{repo_link}/commit/{upcoming}'>"
+    result += f"├─<b>Последняя версия:</b> <a href='{repo_link}/commit/{upcoming}'>"
     result += f"#{upcoming[:7]} ({upcoming_version})</a>\n"
-    result += f"├─<b>Prefix:</b> <code>{prefix}</code>\n"
-    result += f"├─<b>Modules:</b> <code>{modules_help.modules_count}</code>\n"
-    result += f"└─<b>Commands:</b> <code>{modules_help.commands_count}</code>\n\n"
+    result += f"├─<b>Текущий префикс:</b> <code>{prefix}</code>\n"
+    result += f"├─<b>Подключенных модулей:</b> <code>{modules_help.modules_count}</code>\n"
+    result += f"└─<b>Включенных команд:</b> <code>{modules_help.commands_count}</code>\n\n"
 
-    result += "<b>System status:</b>\n"
-    result += f"├─<b>OS:</b> <code>{sys.platform}</code>\n"
-    result += f"├─<b>Kernel:</b> <code>{kernel_version}</code>\n"
-    result += f"├─<b>Uptime:</b> <code>{system_uptime}</code>\n"
-    result += f"├─<b>CPU usage:</b> <code>{cpu_usage}%</code>\n"
-    result += f"└─<b>RAM usage:</b> <code>{ram_usage}MB</code>"
+    result += "<b>Статус:</b>\n"
+    result += f"├─<b>ОС:</b> <code>{sys.platform}</code>\n"
+    result += f"├─<b>Ядро:</b> <code>{kernel_version}</code>\n"
+    result += f"├─<b>Работает:</b> <code>{system_uptime}</code>\n"
+    result += f"├─<b>Использовано ЦП:</b> <code>{cpu_usage}%</code>\n"
+    result += f"└─<b>Использовано ОЗУ:</b> <code>{ram_usage}МБ</code>"
 
     await message.edit(result, disable_web_page_preview=True)
 
 
 module = modules_help.add_module("base", __file__)
-module.add_command("help", "Get common/module/command help.", "[module/command name]", ["h"])
-module.add_command("prefix", "Set custom prefix", None, ["kprefix"])
-module.add_command("restart", "Useful when you want to reload a bot")
-module.add_command("update", "Update the userbot from the repository")
-module.add_command("sendmod", "Send module to chat", "[module_name]", ["sm"])
-module.add_command("status", "Get information about the userbot and system", "[-a]")
+module.add_command("help", "Получение информациии по модулям.", "[module/command name]", ["h"])
+module.add_command("prefix", "Установка другого префикса", None, ["kprefix"])
+module.add_command("restart", "Перезагрузка юзер-бота")
+module.add_command("update", "Обновление юзер-бота с репозитория")
+module.add_command("sendmod", "Отправка модуля с юзер-бота", "[module_name]", ["sm"])
+module.add_command("status", "Получить статус работы юзер-бота", "[-a]")
