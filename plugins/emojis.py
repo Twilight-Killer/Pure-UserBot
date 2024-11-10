@@ -15,7 +15,7 @@ async def emojis(_, message: Message):
         )
 
     if not entities:
-        return await message.edit_text("No entities found")
+        return await message.edit_text("Нету ничего в данной сообщении")
 
     result = [
         f"<emoji id={entity.custom_emoji_id}>🤨</emoji> - <code>{entity.custom_emoji_id}</code>"
@@ -30,4 +30,4 @@ async def emojis(_, message: Message):
 
 
 module = modules_help.add_module("emojis", __file__)
-module.add_command("emojis", "Print custom emojis with their identifiers")
+module.add_command("emojis", "Выводит айди эмодзи для использования")
