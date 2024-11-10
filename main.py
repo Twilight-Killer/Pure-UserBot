@@ -32,12 +32,12 @@ async def main():
     )
 
     app = Client(
-        "KurimuzonUserbot",
+        "Pure",
         api_hash=config.api_hash,
         api_id=config.api_id,
-        device_model="HUAWEISTK-LX1",
-        system_version="SDK 29",
-        app_version="10.5.0 (42285)",
+        device_model="RMX3363",
+        system_version="SDK 34",
+        app_version="11.3.3 (53962)",
         lang_pack="android",
         lang_code="jabka",
         hide_password=True,
