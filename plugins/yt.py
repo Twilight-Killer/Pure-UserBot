@@ -18,14 +18,14 @@ async def ytm(_, message: Message):
     if len(message.command) == 1 and message.command[0] != "ytm":
         return await message.edit_text("<b>Query to search isn't provided</b>")
 
-    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Searching...</b>")
+    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Ищу...</b>")
     query = message.text.split(maxsplit=1)[1]
     results = yt_music.search(query, filter="songs", limit=1)
     if not results:
         return await message.edit_text("<b>No results for: {}</b>".format(query[:35]))
 
     album = yt_music.get_album(results[0]["album"]["id"])
-    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Downloading...</b>")
+    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Скачиваю...</b>")
     thumb_url = album["thumbnails"][-1]["url"]
     thumb_file = BytesIO()
     async with ClientSession() as session:
@@ -35,7 +35,7 @@ async def ytm(_, message: Message):
         info_dict = yt.extract_info("https://music.youtube.com/watch?v=" + results[0]["videoId"], download=True)
         audio_path = yt.prepare_filename(info_dict)
 
-    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Uploading...</b>")
+    await message.edit_text("<b><emoji id=5821116867309210830>🔃</emoji> Загружаю...</b>")
 
     msg = await message.reply_audio(
         audio=audio_path,
@@ -49,11 +49,11 @@ async def ytm(_, message: Message):
     await message.edit_text(
         (
             "<b>- Downloaded successfully !\n"
-            "- Title : {title}\n"
-            "- Artist: {artist}\n"
-            "- Album: {album}\n"
-            "- Is explict: {explict}\n"
-            "- Message link: {link}</b>"
+            "- Название : {title}\n"
+            "- Исполнитель: {artist}\n"
+            "- Альбом: {album}\n"
+            "- Цензура: {explict}\n"
+            "- Ссылка на сообщение: {link}</b>"
         ).format(
             title=results[0]["title"],
             artist=results[0]["artists"][-1]["name"],
