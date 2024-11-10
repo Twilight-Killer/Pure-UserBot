@@ -11,7 +11,7 @@ from utils.scripts import format_exc, get_args_raw
 
 @Client.on_message(command(["kickdel"]) & filters.me)
 async def kick_delete_handler(client: Client, message: Message):
-    await message.edit("<b>Kicking deleted accounts...</b>")
+    await message.edit("<b>Очищаю удалённые аккаунты...</b>")
     try:
         values = [
             await message.chat.ban_member(
@@ -22,8 +22,8 @@ async def kick_delete_handler(client: Client, message: Message):
         ]
     except Exception as e:
         return await message.edit(format_exc(e))
-    await message.edit(f"<b>Successfully kicked {len(values)} deleted account(s)</b>")
+    await message.edit(f"<b>Успешно очистил {len(values)} удалённых</b>")
 
 
 module = modules_help.add_module("admintool", __file__)
-module.add_command("kickdel", "Kick all deleted accounts from chat")
+module.add_command("kickdel", "Удаляет все удаленные аккаунты с чата")
