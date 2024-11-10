@@ -39,4 +39,4 @@ async def cheque_toggle(_: Client, message: Message):
 
 
 module = modules_help.add_module("cheque", __file__)
-module.add_command("cheque", "On/Off CryptoBot cheque hunter", "[on/off]")
+module.add_command("cheque", "Включить или выключить Чек-Хантер", "[on/off]")
