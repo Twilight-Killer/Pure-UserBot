@@ -17,14 +17,14 @@ async def chatpgt(_: Client, message: Message):
 
     if not args:
         return await message.reply(
-            "<emoji id=5260342697075416641>❌</emoji><b> You didn't ask a question GPT</b>",
+            "<emoji id=5260342697075416641>❌</emoji><b> Вы не ввели запрос</b>",
             quote=True,
         )
 
     api_key = db.get("ChatGPT", "api_key")
     if not api_key:
         return await message.reply(
-            "<emoji id=5260342697075416641>❌</emoji><b> You didn't provide an api key for GPT</b>",
+            "<emoji id=5260342697075416641>❌</emoji><b> Вы не установили API ключ от OpenAI</b>",
             quote=True,
         )
 
@@ -39,7 +39,7 @@ async def chatpgt(_: Client, message: Message):
 
     if not data.get("enabled"):
         return await message.reply(
-            "<emoji id=5260342697075416641>❌</emoji><b> GPT is not available right now</b>",
+            "<emoji id=5260342697075416641>❌</emoji><b> ChatGPT пока недоступен</b>",
             quote=True,
         )
 
@@ -47,7 +47,7 @@ async def chatpgt(_: Client, message: Message):
     db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
 
     msg = await message.reply(
-        "<emoji id=5443038326535759644>💬</emoji><b> GPT is generating response, please wait</b>",
+        "<emoji id=5443038326535759644>💬</emoji><b> ChatGPT генерирует ответ...</b>",
         quote=True,
     )
 
@@ -62,13 +62,13 @@ async def chatpgt(_: Client, message: Message):
         data["enabled"] = True
         db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
         return await msg.edit_text(
-            "<emoji id=5260342697075416641>❌</emoji><b> Model is currently overloaded with other requests.</b>"
+            "<emoji id=5260342697075416641>❌</emoji><b> Модель перегружена другими запросами.</b>"
         )
     except Exception as e:
         data["enabled"] = True
         db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
         return await msg.edit_text(
-            f"<emoji id=5260342697075416641>❌</emoji><b> Something went wrong: {e}</b>"
+            f"<emoji id=5260342697075416641>❌</emoji><b> Выбросило ошибку: {e}</b>"
         )
 
     response = completion.choices[0].message.content
@@ -82,13 +82,13 @@ async def chatpgt(_: Client, message: Message):
 
 
 @Client.on_message(command(["gptst"]) & filters.me & ~filters.forwarded & ~filters.scheduled)
-@with_args("<emoji id=5260342697075416641>❌</emoji><b> You didn't provide an api key</b>")
+@with_args("<emoji id=5260342697075416641>❌</emoji><b> Вы не ввели API ключ</b>")
 async def chatpgt_set_key(_: Client, message: Message):
     args = get_args_raw(message)
 
     db.set("ChatGPT", "api_key", args)
     await message.edit_text(
-        "<emoji id=5260726538302660868>✅</emoji><b> You set api key for GPT</b>"
+        "<emoji id=5260726538302660868>✅</emoji><b>Вы установили API ключ</b>"
     )
 
 
@@ -97,12 +97,12 @@ async def chatpgt_clear(_: Client, message: Message):
     db.remove("ChatGPT", f"gpt_id{message.chat.id}")
 
     await message.edit_text(
-        "<emoji id=5258130763148172425>✅</emoji><b> You cleared messages context</b>"
+        "<emoji id=5258130763148172425>✅</emoji><b> Вы очистили контекст</b>"
     )
 
 
 module = modules_help.add_module("chatgpt", __file__)
-module.add_command("gpt", "Ask ChatGPT", "[query]")
-module.add_command("rgpt", "Ask ChatGPT from replied message", "[reply]")
-module.add_command("gptst", "Set GPT api key")
-module.add_command("gptcl", "Clear GPT messages context")
+module.add_command("gpt", "Спросить у ChatGPT", "[query]")
+module.add_command("rgpt", "Спросить у ChatGPT с отвеченного сообщения", "[reply]")
+module.add_command("gptst", "Установить API ключ")
+module.add_command("gptcl", "Очистить контекст")
