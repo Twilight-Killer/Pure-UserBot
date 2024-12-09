@@ -55,8 +55,8 @@ async def chatpgt(_: Client, message: Message):
 
     try:
         completion = await client.chat.completions.create(
-            model="chatgpt-4o-latest",
             messages=data["gpt_messages"] + [{"role": "user", "content": args}],
+            model="gpt-4o"
         )
     except openai.RateLimitError:
         data["enabled"] = True
