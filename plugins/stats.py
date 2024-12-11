@@ -28,7 +28,7 @@ async def handler(_, message: Message):
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		nick = args[0]
-		url = f'https://iccup.com/ru/dota/gamingprofile/{nick}'
+		url = f'https://iccup.com/dota/gamingprofile/{nick}'
 		response = requests.get(url)
 		Gamingprofile = BS(response.text, 'html.parser')
 		text = Gamingprofile.find('div', id = 'main-stata-5x5')
@@ -60,7 +60,7 @@ async def lastgame(_, message: Message):
 	else:
 		try:
 			nick = args[0]
-			url = f'https://iccup.com/ru/dota/gamingprofile/{nick}'
+			url = f'https://iccup.com/dota/gamingprofile/{nick}'
 			response = requests.get(url)
 			soup = BS(response.text, 'html.parser')
 			games = soup.find('tbody', id = 'result-table').find_all('td', limit=5)
@@ -120,7 +120,7 @@ async def profile(_, message: Message):
 	else:
 		try:
 			nick = args[0]
-			url = f'https://iccup.com/ru/profile/view/{nick}'
+			url = f'https://iccup.com/profile/view/{nick}'
 			response = requests.get(url)
 			Profile = BS(response.text, 'html.parser')
 			text = Profile.find('div', class_ = 'allinfo width395')
@@ -143,7 +143,7 @@ async def lastgames(_, message: Message):
 	else:
 		try:
 			nick = args[0]
-			url = f'https://iccup.com/ru/dota/gamingprofile/{nick}'
+			url = f'https://iccup.com/dota/gamingprofile/{nick}'
 			response = requests.get(url)
 			Gamingprofile = BS(response.text, 'html.parser')
 			games = Gamingprofile.find('tbody', id = 'result-table')
