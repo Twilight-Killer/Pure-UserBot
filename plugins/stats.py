@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 from typing import Tuple
 import requests
 from datetime import datetime
+from utils.filters import command
 from bs4 import BeautifulSoup as BS
 def days():
 	date1 = datetime.now()
