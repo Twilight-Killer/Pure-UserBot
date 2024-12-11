@@ -35,12 +35,12 @@ async def ytm(_, message: Message):
     # Параметры для yt-dlp
     ydl_opts = {
     "format": "bestaudio[ext=m4a]",
-    "cookies": '/mnt/d/cookies/cookies.json',  # Путь к файлу cookies в WSL
+    "cookies": '/srv/userbot/Pure-UserBot/cookies.json',
     }
 
 
     with YoutubeDL({'cookies': '/mnt/d/cookies/cookies.json', 'format': 'bestaudio[ext=m4a]'}) as yt:
-    info_dict = yt.extract_info("https://music.youtube.com/watch?v=" + results[0]["videoId"], download=True)
+        info_dict = yt.extract_info("https://music.youtube.com/watch?v=" + results[0]["videoId"], download=True)
 
     audio_path = yt.prepare_filename(info_dict)
 
