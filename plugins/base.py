@@ -170,7 +170,7 @@ async def sendmod(client: Client, message: Message):
 async def _status(_, message: Message):
     common_args, _ = get_args(message)
 
-    await message.edit("<code>Getting info...</code>")
+    await message.edit("<code>Загружаюсь...</code>")
 
     prefix = get_prefix()
     repo_link = "https://github.com/PureAholy/Pure-UserBot"
