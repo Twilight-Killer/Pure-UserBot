@@ -35,7 +35,7 @@ async def main():
         "Pure",
         api_hash=config.api_hash,
         api_id=config.api_id,
-        device_model="RMX3363",
+        device_model="realmeRMX3363",
         system_version="SDK 34",
         app_version="11.3.3 (53962)",
         lang_pack="android",
