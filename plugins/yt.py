@@ -32,7 +32,7 @@ async def ytm(_, message: Message):
     # Параметры для yt-dlp
     ydl_opts = {
         "format": "bestaudio[ext=m4a]",
-        "cookies": "/srv/userbot/Pure-UserBot/cookies.json",  # Убедитесь, что путь правильный для WSL
+        "cookiefile": "/srv/userbot/Pure-UserBot/cookies.json",  # Убедитесь, что путь правильный для WSL
     }
 
     with YoutubeDL(ydl_opts) as yt:
