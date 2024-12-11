@@ -192,7 +192,7 @@ async def _status(_, message: Message):
     )
 
     result = (
-        f"<emoji id=5219903664428167948>🤖</emoji> <a href='{repo_link}'>Pure</a> / "
+        f"<emoji id=5276137821558548459>🖼️</emoji> <a href='{repo_link}'>Pure</a> / "
     )
     result += f"<a href='{repo_link}/commit/{current_hash}'>#{current_hash[:7]} ({current_version})</a>\n\n"
     result += f"<b>Pyrogram:</b> <code>{pyrogram.__version__}</code>\n"
