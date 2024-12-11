@@ -27,7 +27,7 @@ def days_to_season_end():
 @Client.on_message(~filters.scheduled & command(["stats"]) & filters.me & ~filters.forwarded)
 async def handler(_, message: Message):
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     args, _ = get_args(message)
@@ -38,7 +38,7 @@ async def handler(_, message: Message):
         soup = await fetch_page(url)
         text = soup.find('div', id='main-stata-5x5')
         if not text:
-            await message.answer('Такого аккаунта не существует.', reply_to=message.id)
+            await message.reply('Такого аккаунта не существует.', reply_to=message.id)
             return
         
         stats = text.text.replace('\n', ' ').split()
@@ -60,14 +60,14 @@ async def handler(_, message: Message):
             f"<emoji id=5276137821558548459>🖼️</emoji> Группа {ds}\n"
             f"⏳ Конец сезона через: {days_to_season_end()}\n"
         )
-        await message.answer(main, reply_to=message.id)
+        await message.reply(main, reply_to=message.id)
     except Exception as e:
-        await message.answer(f"Ошибка: {e}", reply_to=message.id)
+        await message.reply(f"Ошибка: {e}", reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["last"]) & filters.me & ~filters.forwarded)
 async def lastgame(_, message: Message):
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     args, _ = get_args(message)
@@ -77,14 +77,14 @@ async def lastgame(_, message: Message):
         soup = await fetch_page(url)
         games = soup.find('tbody', id='result-table').find_all('td', limit=5)
         alls = f'ПОСЛЕДНЯЯ ИГРА\n\n👨‍💻 Логин: {nick}\n🧜 Герой: {games[0].text.strip()}\n👟 Мод: {games[1].text.strip()}\n⏰ Время: {games[2].text.strip()}\n⚔️ K/D/A: {games[3].text.strip()}\n🔥 Очки: {games[4].text.strip()} PTS\n\n⏳ Конец сезона через: {days_to_season_end()}'
-        await message.answer(alls, reply_to=message.id)
+        await message.reply(alls, reply_to=message.id)
     except IndexError:
-        await message.answer('Игрок ещё не играл', reply_to=message.id)
+        await message.reply('Игрок ещё не играл', reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["top"]) & filters.me & ~filters.forwarded)
 async def top(_, message: Message):
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     url = 'https://iccup.com/dota/ladder'
@@ -100,12 +100,12 @@ async def top(_, message: Message):
         toplist.append(a)
     
     out = f'№ | Игрок | Очки | Стата | Победа\n' + '\n'.join(toplist)
-    await message.answer(out, reply_to=message.id)
+    await message.reply(out, reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["ladder"]) & filters.me & ~filters.forwarded)
 async def ladder(_, message: Message):
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     url = 'https://iccup.com/dota/teams.html'
@@ -125,13 +125,13 @@ async def ladder(_, message: Message):
         toplist.append(a)
 
     out = f'№ | Команда | Игроки | Стата | Победа\n' + '\n'.join(toplist)
-    await message.answer(out, reply_to=message.id)
+    await message.reply(out, reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["profile"]) & filters.me & ~filters.forwarded)
 async def profile(_, message: Message):
     args, _ = get_args(message)
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     try:
@@ -158,15 +158,15 @@ async def profile(_, message: Message):
             f"🌫️ Коврик: {key[9]}\n\n"
             f"⏳ Конец сезона через: {days_to_season_end()}"
         )
-        await message.answer(profile, reply_to=message.id)
+        await message.reply(profile, reply_to=message.id)
     except AttributeError:
-        await message.answer('Такого аккаунта не существует.', reply_to=message.id)
+        await message.reply('Такого аккаунта не существует.', reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["last5"]) & filters.me & ~filters.forwarded)
 async def lastgames(_, message: Message):
     args, _ = get_args(message)
     if message.from_user.id == 183416928:
-        await message.answer('poshel naxyi', reply_to=message.id)
+        await message.reply('poshel naxyi', reply_to=message.id)
         return
 
     try:
@@ -179,6 +179,6 @@ async def lastgames(_, message: Message):
         for game in games[:5]:
             last5.append(f'🧜 Герой: {game.text.strip()}\n')
 
-        await message.answer('ПОСЛЕДНИЕ 5 ИГР\n\n' + '\n'.join(last5), reply_to=message.id)
+        await message.reply('ПОСЛЕДНИЕ 5 ИГР\n\n' + '\n'.join(last5), reply_to=message.id)
     except IndexError:
-        await message.answer('Игрок ещё не играл', reply_to=message.id)
+        await message.reply('Игрок ещё не играл', reply_to=message.id)
