@@ -48,7 +48,7 @@ async def ytm(_, message: Message):
 
     await message.edit_text(
         (
-            "<b>- Downloaded successfully !\n"
+            "<b>- Готово !\n"
             "- Название : {title}\n"
             "- Исполнитель: {artist}\n"
             "- Альбом: {album}\n"
