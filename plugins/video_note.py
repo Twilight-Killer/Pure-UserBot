@@ -16,18 +16,18 @@ from utils.scripts import shell_exec
 @Client.on_message(~filters.scheduled & command(["vnote"]) & filters.me & ~filters.forwarded)
 async def vnote(_: Client, message: Message):
     if not shutil.which("ffmpeg"):
-        return await message.edit_text("<b>ffmpeg not installed!</b>")
+        return await message.edit_text("<b>Паника...</b>")
 
     msg = message.reply_to_message or message
 
     if not msg.media:
-        return await message.edit_text("<b>Message should contain media!</b>")
+        return await message.edit_text("<b>Не обнаружено видео!</b>")
 
     if msg.media not in (
         MessageMediaType.VIDEO,
         MessageMediaType.ANIMATION,
     ):
-        return await message.edit_text("<b>Only video and gif supported!</b>")
+        return await message.edit_text("<b>Поддерживаю только гифки и видео!</b>")
 
     media = getattr(msg, msg.media.value)
 
@@ -58,7 +58,7 @@ async def vnote(_: Client, message: Message):
                 quote=False,
             )
         except VoiceMessagesForbidden:
-            return await message.edit_text("<b>Voice messages forbidden in this chat.</b>")
+            return await message.edit_text("<b>Здесь нельзя отправлять кружочки:(.</b>")
 
 
 module = modules_help.add_module("vnote", __file__)
