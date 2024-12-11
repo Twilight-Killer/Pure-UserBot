@@ -1,12 +1,7 @@
 from pyrogram import Client, filters, enums
 from pyrogram.types import Message
-
-from utils.filters import command
-from utils.misc import modules_help
-
 from ytmusicapi import YTMusic
 from yt_dlp import YoutubeDL
-
 from aiohttp import ClientSession
 from io import BytesIO
 from os import remove
@@ -31,7 +26,17 @@ async def ytm(_, message: Message):
     async with ClientSession() as session:
         thumb_file.write(await (await session.get(thumb_url)).read())
     thumb_file.name = results[0]["videoId"] + ".jpg"
-    with YoutubeDL({"format": "bestaudio[ext=m4a]"}) as yt:
+
+    # Путь к файлу cookies
+    cookies_path = '/mnt/d/cookies/cookies.json'  # Для WSL используйте путь через /mnt
+
+    # Параметры для yt-dlp
+    ydl_opts = {
+        "format": "bestaudio[ext=m4a]",
+        "cookies": cookies_path,
+    }
+
+    with YoutubeDL(ydl_opts) as yt:
         info_dict = yt.extract_info("https://music.youtube.com/watch?v=" + results[0]["videoId"], download=True)
         audio_path = yt.prepare_filename(info_dict)
 
@@ -63,6 +68,7 @@ async def ytm(_, message: Message):
         )
     )
 
+    # Удаляем временный файл
     return remove(audio_path)
 
 module = modules_help.add_module("ytm", __file__)
