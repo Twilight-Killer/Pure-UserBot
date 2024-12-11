@@ -3,7 +3,9 @@ from typing import Tuple
 import requests
 from datetime import datetime
 from utils.filters import command
+from pyrogram.types import Message
 from bs4 import BeautifulSoup as BS
+from utils.scripts import get_args
 def days():
 	date1 = datetime.now()
 	date2 = datetime(day=3, month=3, year=2023)
@@ -20,8 +22,9 @@ def days():
 ds = '<a href="https://t.me/znakomstvochats">𝐁 𝐀 𝐋 𝐄 𝐍 𝐂 𝐈 𝐀 𝐆 𝐀</a>'
 
 @Client.on_message(~filters.scheduled & command(["stats"]) & filters.me & ~filters.forwarded)
-async def handler(message: Message, args: Tuple[str]):
-	if message.from_id == 183416928:
+async def handler(_, message: Message):
+	args, _ = get_args(message)
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		nick = args[0]
@@ -49,9 +52,10 @@ async def handler(message: Message, args: Tuple[str]):
 		else:
 			await message.answer('Такого аккаунта не существует.', reply_to=message.id)
 
-@user.on.message(CommandRule("last", ["/", "?"], 1))
-async def lastgame(message: Message, args: Tuple[str]):
-	if message.from_id == 183416928:
+@Client.on_message(~filters.scheduled & command(["last"]) & filters.me & ~filters.forwarded)
+async def lastgame(_, message: Message):
+	args, _ = get_args(message)
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		try:
@@ -66,8 +70,8 @@ async def lastgame(message: Message, args: Tuple[str]):
 			await message.answer('Игрок ещё не играл', reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["top"]) & filters.me & ~filters.forwarded)
-async def top(message: Message):
-	if message.from_id == 183416928:
+async def top(_, message: Message):
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		url = 'https://iccup.com/dota/ladder'
@@ -86,8 +90,8 @@ async def top(message: Message):
 		await message.answer(out, reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["ladder"]) & filters.me & ~filters.forwarded)
-async def ladder(message: Message):
-	if message.from_id == 183416928:
+async def ladder(_, message: Message):
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		url = 'https://iccup.com/dota/teams.html'
@@ -109,8 +113,9 @@ async def ladder(message: Message):
 		await message.answer(out, reply_to=message.id)
 
 @Client.on_message(~filters.scheduled & command(["profile"]) & filters.me & ~filters.forwarded)
-async def profile(message: Message, args: Tuple[str]):
-	if message.from_id == 183416928:
+async def profile(_, message: Message):
+	args, _ = get_args(message)
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		try:
@@ -130,9 +135,10 @@ async def profile(message: Message, args: Tuple[str]):
 		except AttributeError:
 			await message.answer('Такого аккаунта не существует.', reply_to=message.id)
 
-@user.on.message(CommandRule("last5", ["/", "?"], 1))
-async def lastgames(message: Message, args: Tuple[str]):
-	if message.from_id == 183416928:
+@Client.on_message(~filters.scheduled & command(["last5"]) & filters.me & ~filters.forwarded)
+async def lastgames(_, message: Message):
+	args, _ = get_args(message)
+	if message.from_user.id == 183416928:
 		await message.answer('poshel naxyi', reply_to=message.id)
 	else:
 		try:
