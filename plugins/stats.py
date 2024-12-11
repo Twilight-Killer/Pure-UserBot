@@ -9,7 +9,7 @@ from datetime import datetime
 async def fetch_page(url: str) -> BS:
     """Выполняет асинхронный GET-запрос и возвращает объект BeautifulSoup."""
     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
+        async with session.get(url, proxy=None) as response:
             response.raise_for_status() 
             html = await response.text()
             return BS(html, 'html.parser')
@@ -38,7 +38,7 @@ async def handler(_, message: Message):
         soup = await fetch_page(url)
         text = soup.find('div', id='main-stata-5x5')
         if not text:
-            await message.reply('Такого аккаунта не существует.', reply_to=message.id)
+            await message.reply('Такого аккаунта не существует.')
             return
         
         stats = text.text.replace('\n', ' ').split()
