@@ -1,12 +1,9 @@
 from pyrogram import Client, filters, enums
 from pyrogram.types import Message
-
 from utils.filters import command
 from utils.misc import modules_help
-
 from ytmusicapi import YTMusic
 from yt_dlp import YoutubeDL
-
 from aiohttp import ClientSession
 from io import BytesIO
 from os import remove
@@ -34,12 +31,11 @@ async def ytm(_, message: Message):
 
     # Параметры для yt-dlp
     ydl_opts = {
-    "format": "bestaudio[ext=m4a]",
-    "cookies": '/srv/userbot/Pure-UserBot/cookies.json',
+        "format": "bestaudio[ext=m4a]",
+        "cookies": "/srv/userbot/Pure-UserBot/cookies.json",  # Убедитесь, что путь правильный для WSL
     }
 
-
-    with YoutubeDL({'cookies': '/mnt/d/cookies/cookies.json', 'format': 'bestaudio[ext=m4a]'}) as yt:
+    with YoutubeDL(ydl_opts) as yt:
         info_dict = yt.extract_info("https://music.youtube.com/watch?v=" + results[0]["videoId"], download=True)
 
     audio_path = yt.prepare_filename(info_dict)
