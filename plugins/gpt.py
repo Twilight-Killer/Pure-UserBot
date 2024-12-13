@@ -8,7 +8,7 @@ from utils.misc import modules_help
 from utils.scripts import get_args_raw, with_args
 
 
-@Client.on_message(command(["gpt", "rgpt"]) & filters.me & ~filters.forwarded & ~filters.scheduled)
+@Client.on_message(command(["gpt", "rgpt"]) & ~filters.forwarded & ~filters.scheduled)
 async def chatpgt(_: Client, message: Message):
     if message.command[0] == "rgpt":
         args = get_args_raw(message, use_reply=True)
