@@ -67,8 +67,8 @@ async def chatpgt_nudes(_: Client, message: Message):
 
     response = completion.choices[0].message.content
     await msg.edit_text(
-        f"<pre>{response}</pre>",
-        parse_mode=enums.ParseMode.HTML
+        f"{response}",
+        parse_mode=enums.ParseMode.MARKDOWN
     )
 @Client.on_message(command(["gpt", "rgpt"]) & ~filters.forwarded & ~filters.scheduled)
 async def chatpgt(_: Client, message: Message):
