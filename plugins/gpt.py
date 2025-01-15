@@ -9,7 +9,7 @@ from utils.scripts import get_args_raw, with_args
 
 @Client.on_message(command(["nudes"]) & ~filters.forwarded & ~filters.scheduled)
 async def chatpgt_nudes(_: Client, message: Message):
-    args = get_args_raw(message)
+    args = get_args_raw(message, use_reply=True)
 
     if not args:
         return await message.reply(
