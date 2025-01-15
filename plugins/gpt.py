@@ -11,12 +11,6 @@ from utils.scripts import get_args_raw, with_args
 async def chatpgt_nudes(_: Client, message: Message):
     args = get_args_raw(message, use_reply=True)
 
-    if not args:
-        return await message.reply(
-            "<emoji id=5260342697075416641>❌</emoji><b> Вы не ввели запрос</b>",
-            quote=True,
-        )
-
     api_key = db.get("ChatGPT", "api_key")
     if not api_key:
         return await message.reply(
@@ -55,7 +49,7 @@ async def chatpgt_nudes(_: Client, message: Message):
     try:
         # Отправляем кастомный запрос к ChatGPT
         completion = await client.chat.completions.create(
-            messages=data["gpt_messages"] + [{"role": "user", "content": custom_prompt}],
+            messages=[{"role": "user", "content": custom_prompt}],
             model="gpt-4o"
         )
     except openai.RateLimitError:
@@ -84,12 +78,6 @@ async def chatpgt_nudes(_: Client, message: Message):
             "price": None,
             "contact": None
         }
-
-    # Обновляем контекст с новым сообщением от пользователя и ответом модели
-    data["gpt_messages"].append({"role": "user", "content": args})  # Добавляем исходный запрос
-    data["gpt_messages"].append({"role": completion.choices[0].message.role, "content": response})  # Добавляем ответ модели
-    data["enabled"] = True
-    db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
 
     # Отправляем результат в формате JSON
     await msg.edit_text(
