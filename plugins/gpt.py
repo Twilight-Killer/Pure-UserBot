@@ -49,9 +49,13 @@ async def chatpgt_nudes(_: Client, message: Message):
 
     client = openai.AsyncOpenAI(api_key=api_key)
 
+    # Создаем кастомный промт
+    custom_prompt = f"Extract the title, description (without price and contact), price, and contact information from the following text. Format as a JSON object:\n{args}"
+
     try:
+        # Отправляем кастомный запрос к ChatGPT
         completion = await client.chat.completions.create(
-            messages=data["gpt_messages"] + [{"role": "user", "content": args}],
+            messages=data["gpt_messages"] + [{"role": "user", "content": custom_prompt}],
             model="gpt-4o"
         )
     except openai.RateLimitError:
@@ -67,35 +71,27 @@ async def chatpgt_nudes(_: Client, message: Message):
             f"<emoji id=5260342697075416641>❌</emoji><b> Выбросило ошибку: {e}</b>"
         )
 
+    # Получаем ответ от модели
     response = completion.choices[0].message.content
 
-    extracted_data = {
-        "title": None,
-        "description": None,
-        "price": None,
-        "contact": None
-    }
+    # Преобразуем ответ в JSON (если необходимо)
+    try:
+        extracted_data = json.loads(response)  # Пробуем преобразовать ответ в JSON
+    except json.JSONDecodeError:
+        extracted_data = {
+            "title": None,
+            "description": None,
+            "price": None,
+            "contact": None
+        }
 
-    price_match = re.search(r"\b(\d+[\.,]?\d*)\s*(?:USD|₽|€|\$)?\b", response)
-    contact_match = re.search(r"(?:\+?[0-9]{1,4}[\s\-]?)?[\(]?[0-9]{1,4}[\)]?[\s\-]?[0-9]{1,4}[\s\-]?[0-9]{1,4}", response)
-
-    if price_match:
-        extracted_data["price"] = price_match.group(0)
-        response = re.sub(price_match.group(0), "", response) 
-
-    if contact_match:
-        extracted_data["contact"] = contact_match.group(0)
-        response = re.sub(contact_match.group(0), "", response) 
-
-    extracted_data["description"] = response.strip()
-    extracted_data["title"] = "Untitled" if not extracted_data["description"] else extracted_data["description"].split("\n")[0]
-
-    # Обновляем контекст
-    data["gpt_messages"].append({"role": "user", "content": args})
-    data["gpt_messages"].append({"role": completion.choices[0].message.role, "content": response})
+    # Обновляем контекст с новым сообщением от пользователя и ответом модели
+    data["gpt_messages"].append({"role": "user", "content": args})  # Добавляем исходный запрос
+    data["gpt_messages"].append({"role": completion.choices[0].message.role, "content": response})  # Добавляем ответ модели
     data["enabled"] = True
     db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
 
+    # Отправляем результат в формате JSON
     await msg.edit_text(
         f"<pre>{json.dumps(extracted_data, indent=2, ensure_ascii=False)}</pre>",
         parse_mode=enums.ParseMode.HTML
