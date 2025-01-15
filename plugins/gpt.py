@@ -44,7 +44,7 @@ async def chatpgt_nudes(_: Client, message: Message):
     client = openai.AsyncOpenAI(api_key=api_key)
 
     # Создаем кастомный промт
-    custom_prompt = f"Extract the title, description (without price and contact), price, and contact information from the following text. Format as a JSON object:\n{args}"
+    custom_prompt = f"Extract the title, description (without price and contact), price, and contact information from the following text. If the text mentions 'write in personal messages' or similar, set the 'contact' field to null. Format the extracted information as a JSON object.\n{args}"
 
     try:
         # Отправляем кастомный запрос к ChatGPT
