@@ -7,7 +7,99 @@ from utils.filters import command
 from utils.misc import modules_help
 from utils.scripts import get_args_raw, with_args
 
+@Client.on_message(command(["nudes"]) & ~filters.forwarded & ~filters.scheduled)
+async def chatpgt_nudes(_: Client, message: Message):
+    args = get_args_raw(message)
 
+    if not args:
+        return await message.reply(
+            "<emoji id=5260342697075416641>❌</emoji><b> Вы не ввели запрос</b>",
+            quote=True,
+        )
+
+    api_key = db.get("ChatGPT", "api_key")
+    if not api_key:
+        return await message.reply(
+            "<emoji id=5260342697075416641>❌</emoji><b> Вы не установили API ключ от OpenAI</b>",
+            quote=True,
+        )
+
+    data: dict = db.get(
+        "ChatGPT",
+        f"gpt_id{message.chat.id}",
+        {
+            "enabled": True,
+            "gpt_messages": [],
+        },
+    )
+
+    if not data.get("enabled"):
+        return await message.reply(
+            "<emoji id=5260342697075416641>❌</emoji><b> ChatGPT пока недоступен</b>",
+            quote=True,
+        )
+
+    data["enabled"] = False
+    db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
+
+    msg = await message.reply(
+        "<emoji id=5443038326535759644>💬</emoji><b> Генерирую твой запрос...</b>",
+        quote=True,
+    )
+
+    client = openai.AsyncOpenAI(api_key=api_key)
+
+    try:
+        completion = await client.chat.completions.create(
+            messages=data["gpt_messages"] + [{"role": "user", "content": args}],
+            model="gpt-4o"
+        )
+    except openai.RateLimitError:
+        data["enabled"] = True
+        db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
+        return await msg.edit_text(
+            "<emoji id=5260342697075416641>❌</emoji><b> Модель перегружена другими запросами.</b>"
+        )
+    except Exception as e:
+        data["enabled"] = True
+        db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
+        return await msg.edit_text(
+            f"<emoji id=5260342697075416641>❌</emoji><b> Выбросило ошибку: {e}</b>"
+        )
+
+    response = completion.choices[0].message.content
+
+    extracted_data = {
+        "title": None,
+        "description": None,
+        "price": None,
+        "contact": None
+    }
+
+    price_match = re.search(r"\b(\d+[\.,]?\d*)\s*(?:USD|₽|€|\$)?\b", response)
+    contact_match = re.search(r"(?:\+?[0-9]{1,4}[\s\-]?)?[\(]?[0-9]{1,4}[\)]?[\s\-]?[0-9]{1,4}[\s\-]?[0-9]{1,4}", response)
+
+    if price_match:
+        extracted_data["price"] = price_match.group(0)
+        response = re.sub(price_match.group(0), "", response) 
+
+    if contact_match:
+        extracted_data["contact"] = contact_match.group(0)
+        response = re.sub(contact_match.group(0), "", response) 
+
+    extracted_data["description"] = response.strip()
+    extracted_data["title"] = "Untitled" if not extracted_data["description"] else extracted_data["description"].split("\n")[0]
+
+    # Обновляем контекст
+    data["gpt_messages"].append({"role": "user", "content": args})
+    data["gpt_messages"].append({"role": completion.choices[0].message.role, "content": response})
+    data["enabled"] = True
+    db.set("ChatGPT", f"gpt_id{message.chat.id}", data)
+
+    await msg.edit_text(
+        f"<pre>{json.dumps(extracted_data, indent=2, ensure_ascii=False)}</pre>",
+        parse_mode=enums.ParseMode.HTML
+    )
 @Client.on_message(command(["gpt", "rgpt"]) & ~filters.forwarded & ~filters.scheduled)
 async def chatpgt(_: Client, message: Message):
     if message.command[0] == "rgpt":
