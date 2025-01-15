@@ -65,23 +65,9 @@ async def chatpgt_nudes(_: Client, message: Message):
             f"<emoji id=5260342697075416641>❌</emoji><b> Выбросило ошибку: {e}</b>"
         )
 
-    # Получаем ответ от модели
     response = completion.choices[0].message.content
-
-    # Преобразуем ответ в JSON (если необходимо)
-    try:
-        extracted_data = json.loads(response)  # Пробуем преобразовать ответ в JSON
-    except json.JSONDecodeError:
-        extracted_data = {
-            "title": None,
-            "description": None,
-            "price": None,
-            "contact": None
-        }
-
-    # Отправляем результат в формате JSON
     await msg.edit_text(
-        f"<pre>{json.dumps(extracted_data, indent=2, ensure_ascii=False)}</pre>",
+        f"<pre>{response}</pre>",
         parse_mode=enums.ParseMode.HTML
     )
 @Client.on_message(command(["gpt", "rgpt"]) & ~filters.forwarded & ~filters.scheduled)
